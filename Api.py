@@ -20,14 +20,22 @@ def predict_course():
         # Parse JSON input
         input_data = request.get_json()
 
-        # Check for required fields
-        required_fields = numeric_features
+        # Check for required fields (age and isParent are mandatory, childAge is optional)
+        required_fields = ['age', 'isParent']
         missing_fields = [field for field in required_fields if field not in input_data]
         if missing_fields:
             return jsonify({"error": f"Missing fields: {missing_fields}"}), 400
 
+        # Allow childAge to be optional/null
+        child_age = input_data.get('childAge', None)
+        if child_age is None:
+            input_data['childAge'] = -1  # Replace null/empty childAge with -1 or a default value
+
         # Create a DataFrame for prediction
         input_df = pd.DataFrame([input_data])
+
+        # Ensure the columns are in the correct order
+        input_df = input_df[numeric_features]
 
         # Make the prediction
         prediction = model.predict(input_df)
