@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Prediction</title>
+</head>
+<body>
+    <h2>Course Prediction Form</h2>
+    <form id="predictionForm">
+        <label>Age: <input type="number" id="age" required></label><br><br>
+        <label>Do you study a lot? 
+            <select id="studytime">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </label><br><br>
+        <label>How often do you miss school? 
+            <select id="absences">
+                <option value="Rarely">Rarely</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Often">Often</option>
+            </select>
+        </label><br><br>
+        <label>How many failures? 
+            <select id="failures">
+                <option value="None">None</option>
+                <option value="Few">Few</option>
+                <option value="Many">Many</option>
+            </select>
+        </label><br><br>
+        <button type="submit">Predict Course</button>
+    </form>
+    <h3 id="result"></h3>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const age = document.getElementById('age').value;
+            const studytime = document.getElementById('studytime').value;
+            const absences = document.getElementById('absences').value;
+            const failures = document.getElementById('failures').value;
+
+            const response = await fetch('http://localhost:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    age: age,
+                    studytime: studytime,
+                    absences: absences,
+                    failures: failures
+                })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = `Predicted Course: ${result.predicted_course}`;
+        });
+    </script>
+</body>
+</html>
