@@ -7,7 +7,6 @@ api_url = 'http://localhost:5000/predict'  # Adjust the URL if necessary
 user_data = {
     'age': 30,
     'isParent': True,
-    'childAge': 5
 }
 
 # Send POST request to the API
